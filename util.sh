@@ -331,7 +331,7 @@ function combine::objects() {
       ;;
     *)
       # Combine *.o objects using ar
-      cat $libname.list | xargs ar -crs $libname.a
+      cat $libname.list | xargs $ARTOOL -crs $libname.a
 
       # Combine *.o objects into a thin library using ar
       # cat $libname.list | xargs ar -ccT $libname.a
@@ -390,7 +390,7 @@ function combine::static() {
       done <$libname.list
       echo "SAVE" >>$libname.ar
       echo "END" >>$libname.ar
-      ar -M < $libname.ar
+      $ARTOOL -M < $libname.ar
       ranlib $libname.a
       ;;
     esac
@@ -504,7 +504,7 @@ function package::prepare() {
       # gflags, ffmpeg, openh264, openmax_dl, winsdk_samples, yasm
       find $header_source_dir -name '*.h' -o -name README -o -name LICENSE -o -name COPYING | \
         grep './third_party' | \
-        grep -E 'boringssl|expat/files|jsoncpp/source/json|libjpeg|libjpeg_turbo|libsrtp|libyuv|libvpx|opus|protobuf|usrsctp/usrsctpout/usrsctpout' | \
+        grep -E 'absl|boringssl|googletest|expat/files|jsoncpp/source/json|libjpeg|libjpeg_turbo|libsrtp|libyuv|libvpx|opus|protobuf|usrsctp/usrsctpout/usrsctpout' | \
         xargs -I '{}' $CP --parents '{}' $outdir/$package_filename/include
 
     popd >/dev/null

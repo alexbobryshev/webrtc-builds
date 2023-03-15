@@ -26,6 +26,8 @@ OPTIONS:
    -e ENABLE_RTTI Compile WebRTC with RTII enabled. Default is '1'.
    -n CONFIGS     Build configurations, space-separated. Default is 'Debug Release'. Other values can be 'Debug', 'Release'.
    -z CUSTOMARGS  Custom build arts in double quotes.
+   -a ARTOOL      Set custom ar tool. Used ar by default.
+   -q             Use CLANG. By default clang is NOT used.
    -x             Express build mode. Skip repo sync and dependency checks, just build, compile and package.
    -D             [Linux] Generate a debian package
    -d             Debug mode. Print all executed commands.
@@ -33,8 +35,9 @@ OPTIONS:
 EOF
 }
 
-while getopts :o:b:r:t:c:l:e:n:z:xDd OPTION; do
+while getopts :a:o:b:r:t:c:l:e:n:z:xDdq OPTION; do
   case $OPTION in
+  a) ARTOOL=$OPTARG ;;
   o) OUTDIR=$OPTARG ;;
   b) BRANCH=$OPTARG ;;
   r) REVISION=$OPTARG ;;
@@ -47,6 +50,7 @@ while getopts :o:b:r:t:c:l:e:n:z:xDd OPTION; do
   x) BUILD_ONLY=1 ;;
   D) PACKAGE_AS_DEBIAN=1 ;;
   d) DEBUG=1 ;;
+  q) ENABLE_CLANG=1 ;;
   ?) usage; exit 1 ;;
   esac
 done
@@ -56,7 +60,7 @@ BRANCH=${BRANCH:-}
 BLACKLIST=${BLACKLIST:-}
 ENABLE_RTTI=${ENABLE_RTTI:-1}
 ENABLE_ITERATOR_DEBUGGING=0
-ENABLE_CLANG=0
+ENABLE_CLANG=${ENABLE_CLANG:-0}
 ENABLE_STATIC_LIBS=1
 BUILD_ONLY=${BUILD_ONLY:-0}
 DEBUG=${DEBUG:-0}
@@ -75,6 +79,8 @@ PATH=$DEPOT_TOOLS_DIR:$DEPOT_TOOLS_DIR/python276_bin:$PATH
 [ "$CUSTOM_BUILD_ARGS_VALUE" != "" ] && CUSTOM_BUILD_ARGS=1
 
 [ "$DEBUG" = 1 ] && set -x
+
+[ "$ARTOOL" == "" ] && ARTOOL=ar
 
 mkdir -p $OUTDIR
 OUTDIR=$(cd $OUTDIR && pwd -P)
