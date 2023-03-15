@@ -25,4 +25,4 @@ rc=$?
 
 cd $CURDIR
 
-exit /b $rc
+exit $rc
