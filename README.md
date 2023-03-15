@@ -2,11 +2,13 @@
 
 [![CircleCI](https://circleci.com/gh/sourcey/webrtc-builds.svg?style=svg)](https://circleci.com/gh/sourcey/webrtc-builds)
 
+Modified by alexb https://github.com/alexbobryshev/webrtc-builds
+
 These cross platform build scripts automate the hard work of building and packaging WebRTC. Big thanks to @vsimon for laying the foundation for these scripts.
 
 ## Supported platforms
 
-* **OSX**: [Homebrew](http://brew.sh/) recommend. Build for 'mac' and 'ios'.
+* **OSX**: [Homebrew](http://brew.sh/) recommend. Build for 'mac' and 'ios'. Requires python 2.7 installed (https://www.python.org/ftp/python/2.7/python-2.7-macosx10.3.dmg), xcode, LLVM
 * **Windows**: Visual Studio Community 2015 Update 3 or newer
 with a bash shell such as [Git for Windows](https://msysgit.github.io) or [MSYS](http://www.mingw.org/wiki/msys)
 installed.
@@ -38,12 +40,15 @@ Usage:
 WebRTC automated build script.
 
 OPTIONS:
+   -a ARTOOL      Custom archive tool (ar by default). For mac/ios llvm-ar should be used
    -o OUTDIR      Output directory. Default is 'out'
    -b BRANCH      Latest revision on git branch. Overrides -r. Common branch names are 'branch-heads/nn', where 'nn' is the release number.
    -r REVISION    Git SHA revision. Default is latest revision.
    -t TARGET OS   The target os for cross-compilation. Default is the host OS such as 'linux', 'mac', 'win'. Other values can be 'android', 'ios'.
    -c TARGET CPU  The target cpu for cross-compilation. Default is 'x64'. Other values can be 'x86', 'arm64', 'arm'.
    -l BLACKLIST   List *.o objects to exclude from the static library.
+   -z CUSTOMARGS  Custom arguments used for gn call. Args must be in double quotes
+   -q             Use clang. Default clang is NOT used.
    -e             Compile WebRTC with RTII enabled.
    -f             Build only mode. Skip repo sync and dependency checks, just build, compile and package.
    -d             Debug mode. Print all executed commands.
