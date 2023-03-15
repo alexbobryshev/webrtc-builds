@@ -415,6 +415,9 @@ function compile() {
   local common_args="rtc_include_tests=false treat_warnings_as_errors=false"
   local target_args="target_os=\"$target_os\" target_cpu=\"$target_cpu\""
 
+  # Custom commands to build
+  [ $CUSTOM_BUILD_ARGS = 1 ] && common_args+=" $CUSTOM_BUILD_ARGS_VALUE"
+
   # Build WebRTC with RTII enbled.
   [ $ENABLE_RTTI = 1 ] && common_args+=" use_rtti=true"
 

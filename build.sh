@@ -25,6 +25,7 @@ OPTIONS:
    -l BLACKLIST   List *.o objects to exclude from the static library.
    -e ENABLE_RTTI Compile WebRTC with RTII enabled. Default is '1'.
    -n CONFIGS     Build configurations, space-separated. Default is 'Debug Release'. Other values can be 'Debug', 'Release'.
+   -z CUSTOMARGS  Custom build arts in double quotes.
    -x             Express build mode. Skip repo sync and dependency checks, just build, compile and package.
    -D             [Linux] Generate a debian package
    -d             Debug mode. Print all executed commands.
@@ -32,7 +33,7 @@ OPTIONS:
 EOF
 }
 
-while getopts :o:b:r:t:c:l:e:n:xDd OPTION; do
+while getopts :o:b:r:t:c:l:e:n:z:xDd OPTION; do
   case $OPTION in
   o) OUTDIR=$OPTARG ;;
   b) BRANCH=$OPTARG ;;
@@ -42,6 +43,7 @@ while getopts :o:b:r:t:c:l:e:n:xDd OPTION; do
   l) BLACKLIST=$OPTARG ;;
   e) ENABLE_RTTI=$OPTARG ;;
   n) CONFIGS=$OPTARG ;;
+  z) CUSTOM_BUILD_ARGS_VALUE=$OPTARG ;;
   x) BUILD_ONLY=1 ;;
   D) PACKAGE_AS_DEBIAN=1 ;;
   d) DEBUG=1 ;;
@@ -70,6 +72,8 @@ DEPOT_TOOLS_DIR=$DIR/depot_tools
 TOOLS_DIR=$DIR/tools
 PATH=$DEPOT_TOOLS_DIR:$DEPOT_TOOLS_DIR/python276_bin:$PATH
 
+[ "$CUSTOM_BUILD_ARGS_VALUE" != "" ] && CUSTOM_BUILD_ARGS=1
+
 [ "$DEBUG" = 1 ] && set -x
 
 mkdir -p $OUTDIR
@@ -90,7 +94,7 @@ echo Checking depot-tools
 check::depot-tools $PLATFORM $DEPOT_TOOLS_URL $DEPOT_TOOLS_DIR
 
 if [ ! -z $BRANCH ]; then
-  REVISION=$(git ls-remote $REPO_URL --heads $BRANCH | head --lines 1 | cut --fields 1) || \
+  REVISION=$(git ls-remote $REPO_URL --heads $BRANCH | head --lines 1 | cut -f 1) || \
     { echo "Cound not get branch revision" && exit 1; }
    echo "Building branch: $BRANCH"
 else
