@@ -6,7 +6,7 @@ ORIGINDIR=$PWD
 
 cd $BASEDIR
 
-source ./build_common.sh
+source ./build_vars.sh
 cd ..
 
 echo "Cleaning previous builds..."
