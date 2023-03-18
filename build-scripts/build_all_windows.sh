@@ -7,16 +7,15 @@ ARG=$1
 
 cd $BASEDIR
 
-source ./build_vars.sh
-cd ..
+source $BASEDIR/build_vars.sh
 
-bash ./cleanup_previous_builds.sh
+bash $BASEDIR/cleanup_previous_builds.sh
 
 OSNAME=Windows
 OSPARAM=win
 
 echo "***** BUILDING $OSNAME x64 *****"
-bash ./build_webrtc.sh $OSPARAM x64 $ARG
+bash $BASEDIR/build_webrtc.sh $OSPARAM x64 $ARG
 rc=$?
 
 if [ "$rc" != "0" ]; then
@@ -26,7 +25,7 @@ if [ "$rc" != "0" ]; then
 fi
 
 echo "***** BUILDING $OSNAME x86 *****"
-bash ./build_webrtc.sh $OSPARAM x86 $ARG
+bash $BASEDIR/build_webrtc.sh $OSPARAM x86 $ARG
 rc=$?
 
 if [ "$rc" != "0" ]; then
@@ -35,18 +34,8 @@ if [ "$rc" != "0" ]; then
   exit 255
 fi
 
-echo "***** BUILDING $OSNAME armv7l *****"
-bash ./build_webrtc.sh $OSPARAM arm $ARG
-rc=$?
-
-if [ "$rc" != "0" ]; then
-  echo "ERROR: Build $OSNAME armv7l error!!!"
-  read -p a
-  exit 255
-fi
-
 echo "***** BUILDING $OSNAME arm64 *****"
-bash ./build_webrtc.sh $OSPARAM arm64 $ARG
+bash $BASEDIR/build_webrtc.sh $OSPARAM arm64 $ARG
 rc=$?
 
 if [ "$rc" != "0" ]; then
